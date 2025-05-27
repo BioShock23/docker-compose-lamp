@@ -1,0 +1,36 @@
+RewriteEngine On
+
+# Don't redirect admin, management, api, and pages directories
+RewriteCond %{REQUEST_URI} !^/admin/
+RewriteCond %{REQUEST_URI} !^/management/
+RewriteCond %{REQUEST_URI} !^/api/
+RewriteCond %{REQUEST_URI} !^/pages/
+RewriteCond %{REQUEST_URI} !^/src/
+RewriteCond %{REQUEST_URI} !^/public/
+
+# Redirect main application pages to pages directory
+RewriteRule ^(dashboard|profile|statistics|transport_records|map|admin)\.php$ pages/$1.php [L]
+
+# Redirect API calls to api directory
+RewriteRule ^get_node_receivers\.php$ api/get_node_receivers.php [L]
+
+# Redirect to index.php if file doesn't exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/index\.php
+RewriteRule ^(.*)$ /index.php [L]
+
+# Handle PHP files without extension (optional) but exclude organized directories
+RewriteCond %{REQUEST_URI} !^/admin/
+RewriteCond %{REQUEST_URI} !^/management/
+RewriteCond %{REQUEST_URI} !^/api/
+RewriteCond %{REQUEST_URI} !^/pages/
+RewriteCond %{REQUEST_URI} !^/src/
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# Enable error reporting for debugging
+php_flag display_errors On
+php_value error_reporting "E_ALL"
